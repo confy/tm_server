@@ -1,0 +1,13 @@
+evosc/Cache/*
+!evosc/Cache/.gitkeep
+evosc/Config/*
+!evosc/Config/default/
+evosc/Modules/*
+!evosc/Modules/.gitkeep
+mysql/*
+UserData/Config/*
+!UserData/Config/dedicated_cfg.default.txt
+UserData/Maps/*
+!UserData/Maps/MatchSettings/
+!.gitignore
+!docker-compose.yml

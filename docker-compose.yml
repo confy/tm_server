@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+    trackmania:
+        image: evotm/trackmania:latest
+        restart: always
+        ports:
+            - 2350:2350/udp
+            - 2350:2350/tcp
+        environment:
+            DEDICATED_CFG: "dedicated_cfg.txt"
+            GAME_SETTINGS: "tracklist.txt"
+        volumes:
+            - "./UserData:/server/UserData"
+
+    mysql:
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_DATABASE: evosc
+            MYSQL_USER: evosc
+            MYSQL_PASSWORD: evosc
+            MYSQL_ROOT_PASSWORD: evosc
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-flush-log-at-trx-commit=0
+        volumes:
+            - ./mysql:/var/lib/mysql
+        expose:
+            - "3306"
+
+    evosc:
+        image: evotm/evosc:latest
+        restart: always
+        depends_on:
+            trackmania:
+                condition: service_healthy
+        environment:
+            DB_HOST: mysql
+            DB_NAME: evosc
+            DB_USER: evosc
+            DB_PASSWORD: evosc
+            RPC_IP: "trackmania"
+            RPC_LOGIN: SuperAdmin
+            RPC_PASSWORD: EvoSC
+        volumes:
+            - "./UserData:/server/UserData"
+            - "./evosc/Config:/controller/config"
+            - "./evosc/Modules:/controller/modules"
+            - "./evosc/Cache:/controller/cache"
